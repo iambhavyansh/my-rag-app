@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PDF RAG Assistant</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <span class="logo-icon">⚡</span>
+          <span class="logo-text">RAG Assistant</span>
+        </div>
+      </div>
+
+      <!-- Upload Section -->
+      <div class="upload-section">
+        <p class="upload-label">Upload a PDF to start</p>
+
+        <label class="upload-box" id="uploadBox">
+          <input type="file" id="fileInput" accept=".pdf" hidden />
+          <div class="upload-content" id="uploadContent">
+            <div class="upload-icon">📄</div>
+            <p class="upload-text">Click or drag a PDF here</p>
+            <p class="upload-hint">Max 50MB</p>
+          </div>
+        </label>
+
+        <button class="upload-btn" id="uploadBtn" disabled>
+          Upload & Index
+        </button>
+
+        <!-- Status Bar -->
+        <div class="status-bar" id="statusBar" style="display:none">
+          <div class="status-dot" id="statusDot"></div>
+          <span class="status-text" id="statusText">Indexing...</span>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <p>Powered by Gemini + Qdrant</p>
+      </div>
+    </aside>
+
+    <!-- Main Chat Area -->
+    <main class="chat-area">
+
+      <!-- Top Bar -->
+      <header class="topbar">
+        <div class="topbar-info">
+          <span class="topbar-title" id="topbarTitle">No document loaded</span>
+          <span class="topbar-badge" id="topbarBadge" style="display:none">Ready</span>
+        </div>
+        <button class="clear-btn" id="clearBtn">Clear Chat</button>
+      </header>
+
+      <!-- Messages -->
+      <div class="messages" id="messages">
+        <div class="empty-state">
+          <div class="empty-icon">🤖</div>
+          <h2>Upload a PDF to get started</h2>
+          <p>Ask anything about your document once it's indexed.</p>
+        </div>
+      </div>
+
+      <!-- Input Bar -->
+      <div class="input-bar">
+        <div class="input-wrapper">
+          <textarea
+            id="questionInput"
+            class="question-input"
+            placeholder="Ask a question about your PDF..."
+            rows="1"
+            disabled
+          ></textarea>
+          <button class="send-btn" id="sendBtn" disabled>
+            <span id="sendIcon">➤</span>
+          </button>
+        </div>
+        <p class="input-hint">Press Enter to send, Shift+Enter for new line</p>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

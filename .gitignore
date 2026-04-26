@@ -1,0 +1,10 @@
+backend/.venv/
+backend/__pycache__/
+backend/*.pyc
+backend/checkpoint.json
+backend/checkpoint_meta.json
+
+backend/.env
+
+.DS_Store
+Thumbs.db
