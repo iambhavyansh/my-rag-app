@@ -15,7 +15,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins     = ["*"],  # Vite's default port
+    allow_origins     = ["https://my-rag-app-rust.vercel.app"],  # Vite's default port
     allow_credentials = True,
     allow_methods     = ["*"],
     allow_headers     = ["*"],
