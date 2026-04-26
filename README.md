@@ -131,7 +131,7 @@ my-rag-app/
 │   ├── main.py          ← FastAPI app + all routes
 │   ├── indexer.py       ← PDF loading, chunking, embedding
 │   ├── retriever.py     ← vector search + LLM streaming
-│   ├── .env             ← API keys (never commit this!)
+│   ├── .env             ← API keys 
 │   └── requirements.txt
 ├── frontend/
 │   ├── index.html       ← app structure
