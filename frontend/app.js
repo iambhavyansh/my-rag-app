@@ -1,4 +1,4 @@
-const API_URL = "https://my-rag-backend-cjke.onrender.com/";
+const API_URL = "https://my-rag-backend-cjke.onrender.com";
 
 // ── State ─────────────────────────────────────────────────
 let collectionId  = null;
