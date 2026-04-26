@@ -272,3 +272,12 @@ clearBtn.addEventListener("click", () => {
     </div>
   `;
 });
+
+async function wakeUpBackend() {
+  try {
+    await fetch(`${API_URL}/`);
+  } catch (err) {
+    console.log("Backend waking up...");
+  }
+}
+wakeUpBackend();
