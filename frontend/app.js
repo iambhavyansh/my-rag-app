@@ -89,7 +89,30 @@ uploadBtn.addEventListener("click", async () => {
     setStatus("indexing", "Indexing your PDF...");
 
     // Poll status every 5 seconds
-    statusInterval = setInterval(pollStatus, 5000);
+    statusInterval = listenToProgress(collectionId);
+
+    function listenToProgress(collectionId) {
+      const source = new EventSource(`${API_URL}/progress/${collectionId}`);
+
+      source.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        
+        if (data.done) {
+          source.close();
+          setStatus("done", "Ready to chat!");
+          topbarBadge.style.display = "inline";
+          enableChat();
+          addBotMessage("✅ PDF indexed! Ask me anything about your document.");
+        } else {
+          setStatus("indexing", data.message);  // shows countdown live
+        }
+      };
+
+      source.onerror = () => {
+        source.close();
+        setStatus("error", "Lost connection — refresh and try again");
+      };
+    }
 
   } catch (err) {
     setStatus("error", "Something Wrong Happened, wait for 30 secs");

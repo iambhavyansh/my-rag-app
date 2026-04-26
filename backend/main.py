@@ -3,9 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
-from indexer import index_pdf
+from indexer import index_pdf,progress_store
 from retriever import get_answer
 import uuid, os
+import asyncio,json
 
 load_dotenv()
 
@@ -86,3 +87,18 @@ def chat(req: ChatRequest):
         get_answer(req.question, req.collection_id, req.chat_history),
         media_type="text/plain"
     )
+
+@app.get("/progress/{collection_id}")
+async def get_progress(collection_id: str):
+    async def event_stream():
+        while True:
+            progress = progress_store.get(collection_id)
+            if not progress:
+                yield f"data: {json.dumps({'message': 'Waiting...', 'done': False})}\n\n"
+            else:
+                yield f"data: {json.dumps(progress)}\n\n"
+                if progress.get("done"):
+                    break
+            await asyncio.sleep(1)
+
+    return StreamingResponse(event_stream(), media_type="text/event-stream")

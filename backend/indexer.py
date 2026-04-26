@@ -3,9 +3,14 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_qdrant import QdrantVectorStore
 import time, json, tempfile, os
+from queue import Queue
 
 BATCH_TOKEN_LIMIT = 25000
 DELAY_SECONDS     = 62
+
+progress_store = {}
+
+
 
 def estimate_tokens(text):
     return len(text) // 4
@@ -34,6 +39,7 @@ def smart_batch(chunks, token_limit=BATCH_TOKEN_LIMIT):
 
 def index_pdf(file_bytes: bytes, collection_name: str):
     print(f"📄 Starting indexing for collection: {collection_name}")
+    progress_store[collection_name] = {"message": "Loading PDF...", "done": False}
 
    
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
@@ -100,6 +106,12 @@ def index_pdf(file_bytes: bytes, collection_name: str):
 
                     if i < len(batches) - 1:
                         print(f"😴 Sleeping {DELAY_SECONDS}s...")
+                        for remaining in range(62, 0, -1):
+                            progress_store[collection_name] = {
+                                "message": f"Rate limit pause... {remaining}s (batch {i+1}/{len(batches)})",
+                                "done": False
+                            }
+                            time.sleep(1)
                         time.sleep(DELAY_SECONDS)
                     break
 
@@ -111,7 +123,7 @@ def index_pdf(file_bytes: bytes, collection_name: str):
 
             if retries == 3:
                 print(f"🚨 Batch {i+1} permanently failed — skipping")
-
+        progress_store[collection_name] = {"message": "Done!", "done": True}
         print(f"\n🎉 Indexing complete for {collection_name}!")
 
     finally:
